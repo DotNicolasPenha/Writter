@@ -1,0 +1,76 @@
+/* ── Overlay ── */
+.modal-layer{
+  position:fixed;inset:0;background:rgba(0,0,0,.2);
+  display:grid;place-items:center;z-index:50;
+  visibility:hidden;opacity:0;
+  transition:visibility var(--duration-normal),opacity var(--duration-normal) var(--ease);
+}
+.modal-layer.open{visibility:visible;opacity:1}
+
+/* ── Modal container ── */
+.modal{
+  width:min(400px,calc(100% - 32px));background:var(--paper);
+  border-radius:var(--radius-lg);padding:var(--space-6);
+  box-shadow:0 8px 32px rgba(0,0,0,.08);
+  transform:scale(.98) translateY(6px);
+  transition:transform var(--duration-slow) var(--ease-emphasized);
+}
+.modal-layer.open .modal{transform:scale(1) translateY(0)}
+.modal.is-closing{
+  transform:scale(.98) translateY(6px);
+  transition:transform var(--duration-fast) var(--ease);
+}
+
+/* ── Header ── */
+.modal h2{
+  font-size:16px;font-weight:600;letter-spacing:-.02em;line-height:1.3;
+  margin:0 0 var(--space-2);color:var(--ink);
+}
+.modal-desc{
+  margin:0 0 var(--space-5);font-size:14px;color:var(--muted);line-height:1.5;
+  display:none;
+}
+.modal-desc.visible{display:block}
+
+/* ── Content ── */
+.modal-input{display:block;margin-bottom:var(--space-5)}
+.modal-input.hidden{display:none}
+.modal input{
+  width:100%;height:var(--input-h);
+  border:1px solid var(--line);border-radius:var(--radius-md);
+  outline:0;padding:0 var(--space-3);
+  background:var(--bg);color:var(--ink);font-size:15px;
+  transition:border-color var(--duration-fast) var(--ease),box-shadow var(--duration-fast) var(--ease);
+}
+.modal input::placeholder{color:var(--muted)}
+.modal input:hover{border-color:#c7c7cc}
+.modal input:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+
+/* ── Footer ── */
+.modal-actions{
+  display:flex;justify-content:flex-end;gap:var(--space-2);
+}
+.modal-actions button{
+  height:var(--btn-h);padding:0 var(--space-4);
+  border-radius:var(--radius-sm);font-size:13px;font-weight:500;
+  transition:background var(--duration-fast) var(--ease),transform var(--duration-fast) var(--ease);
+}
+.modal-actions button:active{transform:scale(.96)}
+
+/* Cancel — secondary */
+.cancel{background:rgba(0,0,0,.06);color:var(--ink)}
+.cancel:hover{background:rgba(0,0,0,.1)}
+
+/* Confirm — primary */
+.confirm{background:var(--ink);color:#fff}
+.confirm:hover{background:#000}
+
+/* Danger — destructive */
+.danger-confirm{background:var(--danger);color:#fff}
+.danger-confirm:hover{background:#d32f2f}
+
+/* ── Reduced motion ── */
+@media(prefers-reduced-motion:reduce){
+  .modal-layer{transition:none}
+  .modal,.modal.is-closing{transition:none}
+}

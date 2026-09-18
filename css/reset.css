@@ -1,0 +1,8 @@
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;color:var(--ink);background:var(--bg)}
+body{overflow:hidden;font-family:var(--font-body)}
+button,input,textarea{font:inherit}
+button{border:0;background:none;color:inherit;cursor:pointer}
+::selection{background:#b9d9ff}
+
+.material-symbols-outlined{font-variation-settings:'FILL'0,'wght'400,'GRAD'0,'opsz'24;font-size:20px;line-height:1}

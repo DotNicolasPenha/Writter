@@ -1,0 +1,19 @@
+@media(max-width:680px){
+  :root{--sidebar-collapsed:52px}
+  .sidebar{width:var(--sidebar-collapsed);flex-basis:var(--sidebar-collapsed);padding:var(--space-4) var(--space-2)}
+  .sidebar .section-list{display:none}
+  .toggle{margin:0}
+  .topbar{padding:0 var(--space-4)}
+  .feed{padding:var(--space-6) var(--space-4) 180px}
+  .composer-wrap{padding:var(--space-4) var(--space-3) var(--space-5)}
+  .composer{width:100%}
+  .composer:focus-within{width:100%}
+  .entry-text{font-size:15px}
+
+  .settings{max-height:90vh;width:min(100%,400px)}
+  .settings-body{padding:var(--space-4)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;transform:none!important}
+}

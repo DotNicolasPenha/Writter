@@ -1,0 +1,30 @@
+.app{height:100vh;display:flex;overflow:hidden}
+
+.main{min-width:0;flex:1;height:100vh;position:relative;display:flex;flex-direction:column;background:var(--bg)}
+.topbar{height:var(--topbar-h);display:flex;align-items:center;padding:0 var(--space-6);position:relative;z-index:3}
+.section-title{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.01em}
+.save-state{margin-left:auto;color:var(--muted);font-size:12px}
+
+.feed{flex:1;overflow-y:auto;padding:var(--space-7) var(--space-6) 200px}
+.feed-inner{width:min(720px,100%);margin:0 auto}
+.empty{min-height:50vh;display:grid;place-items:center;text-align:center;color:var(--muted)}
+.empty p{margin:0;font-size:14px;line-height:1.5}
+
+.entry{margin:0 0 var(--space-6)}
+.entry-meta{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);color:var(--muted);font-size:11px}
+.entry-meta .kind{color:#6e6e73}
+.entry-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:1.65}
+.entry-actions{
+  height:0;overflow:hidden;display:flex;gap:var(--space-1);
+  transition:height var(--duration-normal) var(--ease);
+}
+.entry:hover .entry-actions{height:var(--btn-icon);margin-top:var(--space-2)}
+.icon-btn{
+  width:var(--btn-icon);height:var(--btn-icon);border-radius:var(--radius-sm);
+  display:grid;place-items:center;color:var(--muted);
+  transition:background var(--duration-fast) var(--ease),transform var(--duration-fast) var(--ease),color var(--duration-fast);
+}
+.icon-btn:hover{background:rgba(0,0,0,.06);color:var(--ink)}
+.icon-btn:active{transform:scale(.88)}
+.icon-btn .material-symbols-outlined{font-size:16px}
+.icon-btn.danger:hover{color:var(--danger)}

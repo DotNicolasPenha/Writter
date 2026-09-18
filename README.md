@@ -1,0 +1,136 @@
+# Writter
+
+A minimal, distraction-free writing app built with vanilla HTML, CSS, and JavaScript. No frameworks, no build tools, no dependencies.
+
+---
+
+![Initial page](assets/images/initial-page.png)
+
+---
+
+## Features
+
+- **Section-based organization** -- group your writings into named sections
+- **Real-time auto-save** -- every change is persisted to localStorage instantly
+- **Fully customizable appearance** -- fonts, colors, spacing, dimensions
+- **Collapsible sidebar** -- toggle between expanded and icon-only mode
+- **Keyboard shortcuts** -- `Cmd/Ctrl + Enter` to save, `Escape` to close modals
+- **Responsive design** -- works across desktop and mobile
+- **Smooth animations** -- text-swap save indicator, exit transitions, modal open/close
+
+---
+
+## Customization
+
+All visual aspects of the app can be configured through the Settings panel.
+
+![Settings](assets/images/settings.png)
+
+### Appearance
+
+| Setting | Description |
+|---------|-------------|
+| Font | Choose from 6 font families (Lora, Poppins, Comic Relief, Huninn, System UI, Georgia) |
+| Background color | Main app background |
+| Paper color | Writing area background |
+| Text color | Primary text color |
+| Muted color | Subdued text and labels |
+| Border color | Input borders and dividers |
+| Danger color | Error states and destructive actions |
+| Accent color | Interactive elements highlight |
+
+### Dimensions
+
+| Setting | Range | Default |
+|---------|-------|---------|
+| Spacing | 50--150% | 100% |
+| Border radius | 0--200% | 100% |
+| Sidebar width | 160--320px | 240px |
+| Input height | 28--56px | 40px |
+
+---
+
+## Usage
+
+![Use example](assets/images/use-example.png)
+
+1. Open `index.html` in any modern browser
+2. Click **New section** in the sidebar to create a named group
+3. Type in the composer at the bottom and press `Cmd/Ctrl + Enter` to save
+4. Click the **Settings** icon to customize colors, fonts, and dimensions
+5. Click the **dock icon** in the sidebar header to collapse it
+
+---
+
+## Project Structure
+
+```
+writter/
+├── index.html
+├── assets/
+│   └── images/
+├── css/
+│   ├── variables.css        # Design tokens (colors, spacing, typography)
+│   ├── reset.css            # CSS reset / normalize
+│   ├── sidebar.css          # Sidebar layout and collapsed state
+│   ├── main.css             # Main content area
+│   ├── composer.css         # Input composer at the bottom
+│   ├── modal.css            # Section create/rename/delete modal
+│   ├── settings.css         # Settings panel
+│   ├── responsive.css       # Breakpoint adjustments
+│   ├── text-swap.css        # Save indicator animation
+│   └── exit-animations.css  # Element removal transitions
+└── js/
+    ├── app.js               # Entry point, initializes all modules
+    ├── store.js             # Data model and localStorage persistence
+    ├── dom.js               # Cached DOM element references
+    ├── feed.js              # Feed rendering and entry CRUD
+    ├── modal.js             # Section modal (create/rename/delete)
+    ├── sidebar.js           # Section list and sidebar toggle
+    └── settings.js          # Settings config, rendering, and application
+```
+
+---
+
+## Architecture
+
+The app uses a **data-driven settings system**. All settings are defined as a configuration array in `settings.js`:
+
+```js
+const settingsConfig = [
+  {
+    section: "Appearance",
+    fields: [
+      { id: "setBg", label: "Background color", type: "color", settingsKey: "bg" },
+      // ...
+    ],
+  },
+];
+```
+
+Adding a new setting requires only adding a single object to the config -- no HTML or additional JS needed.
+
+---
+
+## Data
+
+All data is stored in `localStorage` under the key `meu-espaco-escrita-v1`. Clearing browser data will reset the app.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Markup | HTML5 |
+| Styling | Vanilla CSS (custom properties) |
+| Logic | Vanilla JavaScript (ES modules) |
+| Icons | Google Material Symbols |
+| Fonts | Google Fonts (Lora, Poppins, Comic Relief, Huninn) |
+| Storage | localStorage |
+
+---
+
+## License
+
+MIT

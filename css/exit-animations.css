@@ -1,0 +1,49 @@
+:root {
+  --exit-dur: 200ms;
+  --exit-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ── Entry exit (feed) ── */
+.is-exit {
+  margin-bottom: 0 !important;
+  will-change: transform, max-height;
+  animation: exit-fade-up var(--exit-dur) var(--exit-ease) forwards;
+}
+
+@keyframes exit-fade-up {
+  0% {
+    transform: translateY(0);
+    max-height: 500px;
+  }
+  100% {
+    transform: translateY(-8px);
+    max-height: 0;
+    overflow: hidden;
+  }
+}
+
+/* ── Section item exit (sidebar) ── */
+.section-item.is-exit {
+  will-change: transform, max-height;
+  animation: exit-collapse-left var(--exit-dur) var(--exit-ease) forwards;
+}
+
+@keyframes exit-collapse-left {
+  0% {
+    transform: translateX(0);
+    max-height: 40px;
+  }
+  100% {
+    transform: translateX(-12px);
+    max-height: 0;
+    overflow: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-exit,
+  .section-item.is-exit {
+    animation: none !important;
+    display: none !important;
+  }
+}
