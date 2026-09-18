@@ -54,7 +54,7 @@ All visual aspects of the app can be configured through the Settings panel.
 
 ![Use example](assets/images/use-example.png)
 
-1. Open `index.html` in any modern browser
+1. Open https://writter-one.vercel.app in any modern browser
 2. Click **New section** in the sidebar to create a named group
 3. Type in the composer at the bottom and press `Cmd/Ctrl + Enter` to save
 4. Click the **Settings** icon to customize colors, fonts, and dimensions
