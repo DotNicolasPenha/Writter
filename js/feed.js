@@ -43,11 +43,16 @@ export function renderFeed(){
     btn.addEventListener("click", () => {
       const entry = btn.closest(".entry");
       const id = entry.dataset.id;
-      entry.classList.add("is-exit");
-      entry.addEventListener("animationend", () => {
+      let removed = false;
+      const finish = () => {
+        if(removed) return;
+        removed = true;
         data.entries = data.entries.filter(e => e.id !== id);
         save(); window.__renderAll();
-      }, { once: true });
+      };
+      entry.classList.add("is-exit");
+      entry.addEventListener("animationend", finish, { once: true });
+      setTimeout(finish, 400);
     });
   });
 
@@ -94,7 +99,32 @@ function addEntry(){
   save();
   window.__renderAll();
   requestAnimationFrame(() => {
-    feed.scrollTo({top:feed.scrollHeight,behavior:"smooth"});
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    feed.scrollTo({top:feed.scrollHeight,behavior:reduce ? "auto" : "smooth"});
+  });
+}
+
+/* Keeps the composer above the on-screen keyboard on mobile.
+   Sets --kb on :root, consumed by .composer-wrap { bottom: var(--kb) }. */
+function initViewport(){
+  if(!window.visualViewport) return;
+  const vv = window.visualViewport;
+  let kb = 0;
+
+  const apply = () => document.documentElement.style.setProperty("--kb", kb + "px");
+  const update = () => {
+    if(document.activeElement !== input || vv.scale > 1){
+      if(kb){ kb = 0; apply(); }
+      return;
+    }
+    kb = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+    apply();
+  };
+
+  vv.addEventListener("resize", update);
+  vv.addEventListener("scroll", update);
+  input.addEventListener("blur", () => {
+    setTimeout(() => { if(kb){ kb = 0; apply(); } }, 80);
   });
 }
 
@@ -110,4 +140,6 @@ export function initFeed(){
   window.addEventListener("keydown",e=>{
     if((e.metaKey||e.ctrlKey)&&e.key==="/"){e.preventDefault();input.focus()}
   });
+
+  initViewport();
 }

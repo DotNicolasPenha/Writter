@@ -1,24 +1,31 @@
-.app{height:100vh;display:flex;overflow:hidden}
+.app{height:100vh;height:100dvh;display:flex;overflow:hidden}
 
-.main{min-width:0;flex:1;height:100vh;position:relative;display:flex;flex-direction:column;background:var(--bg)}
-.topbar{height:var(--topbar-h);display:flex;align-items:center;padding:0 var(--space-6);position:relative;z-index:3}
-.section-title{font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.01em}
-.save-state{margin-left:auto;color:var(--muted);font-size:12px}
+.main{min-width:0;flex:1;height:100vh;height:100dvh;position:relative;display:flex;flex-direction:column;background:var(--bg)}
+.topbar{
+  height:var(--topbar-h);
+  height:calc(var(--topbar-h) + env(safe-area-inset-top,0px));
+  padding-top:env(safe-area-inset-top,0px);
+  display:flex;align-items:center;padding-left:var(--space-6);padding-right:var(--space-6);
+  position:relative;z-index:3;
+}
+.section-title{
+  font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;
+}
+.save-state{margin-left:auto;color:var(--muted);font-size:12px;flex-shrink:0;padding-left:var(--space-3)}
 
-.feed{flex:1;overflow-y:auto;padding:var(--space-7) var(--space-6) 200px}
+.feed{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:var(--space-7) var(--space-6) 260px}
 .feed-inner{width:min(720px,100%);margin:0 auto}
 .empty{min-height:50vh;display:grid;place-items:center;text-align:center;color:var(--muted)}
 .empty p{margin:0;font-size:14px;line-height:1.5}
 
 .entry{margin:0 0 var(--space-6)}
-.entry-meta{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);color:var(--muted);font-size:11px}
+.entry-meta{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);color:var(--muted);font-size:11px;flex-wrap:wrap}
 .entry-meta .kind{color:#6e6e73}
 .entry-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:1.65}
 .entry-actions{
-  height:0;overflow:hidden;display:flex;gap:var(--space-1);
-  transition:height var(--duration-normal) var(--ease);
+  display:flex;gap:var(--space-1);margin-top:var(--space-2);
 }
-.entry:hover .entry-actions{height:var(--btn-icon);margin-top:var(--space-2)}
 .icon-btn{
   width:var(--btn-icon);height:var(--btn-icon);border-radius:var(--radius-sm);
   display:grid;place-items:center;color:var(--muted);
@@ -28,3 +35,14 @@
 .icon-btn:active{transform:scale(.88)}
 .icon-btn .material-symbols-outlined{font-size:16px}
 .icon-btn.danger:hover{color:var(--danger)}
+
+/* Actions are revealed on hover only where hover actually exists.
+   On touch devices they stay permanently visible. */
+@media (hover:hover) and (pointer:fine){
+  .entry-actions{
+    height:0;overflow:hidden;margin-top:0;
+    transition:height var(--duration-normal) var(--ease);
+  }
+  .entry:hover .entry-actions,
+  .entry:focus-within .entry-actions{height:var(--btn-icon);margin-top:var(--space-2)}
+}

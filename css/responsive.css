@@ -1,19 +1,138 @@
-@media(max-width:680px){
-  :root{--sidebar-collapsed:52px}
-  .sidebar{width:var(--sidebar-collapsed);flex-basis:var(--sidebar-collapsed);padding:var(--space-4) var(--space-2)}
-  .sidebar .section-list{display:none}
-  .toggle{margin:0}
-  .topbar{padding:0 var(--space-4)}
-  .feed{padding:var(--space-6) var(--space-4) 180px}
-  .composer-wrap{padding:var(--space-4) var(--space-3) var(--space-5)}
-  .composer{width:100%}
-  .composer:focus-within{width:100%}
-  .entry-text{font-size:15px}
+/* ============================================================
+   Responsive layer — loaded last, overrides everything above.
+   Breakpoints: 680px (phone), 1024px (tablet), 1440px (wide),
+   plus short viewports (landscape phones) and coarse pointers.
+   ============================================================ */
 
-  .settings{max-height:90vh;width:min(100%,400px)}
-  .settings-body{padding:var(--space-4)}
+/* ── Touch devices: bigger hit targets ───────────────────── */
+@media (pointer:coarse){
+  :root{
+    --btn-icon:36px;
+    --btn-h:44px;
+    --section-h:44px;
+    --composer-h:44px;
+  }
+  .icon-btn .material-symbols-outlined,
+  .section-btn .material-symbols-outlined{font-size:18px}
+  .modal-actions button,
+  .settings-footer button{height:44px}
+  .settings-color{width:40px;height:40px}
+  .settings-select{height:40px}
+  .settings-number{height:38px}
+
+  /* Section actions sit inline (no hover to reveal them on touch). */
+  .section-item{display:flex;align-items:center;gap:var(--space-1)}
+  .section{flex:1;min-width:0}
+  .section-actions{padding:0 var(--space-2) 0 0;justify-content:flex-end;align-items:center}
+
+  /* 16px avoids iOS/Android auto-zoom when focusing an input. */
+  .composer textarea,
+  .modal input,
+  .settings-number,
+  .settings-select{font-size:16px}
 }
 
-@media(prefers-reduced-motion:reduce){
-  *{transition:none!important;transform:none!important}
+/* Keyboard shortcut hint is meaningless without a keyboard. */
+@media (hover:none),(pointer:coarse){
+  .hint{display:none}
+}
+
+/* ── Tablet (681px – 1024px) ────────────────────────────── */
+@media (min-width:681px) and (max-width:1024px){
+  .topbar{padding-left:var(--space-5);padding-right:var(--space-5)}
+  .feed{padding:var(--space-6) var(--space-5) 260px}
+  .composer-wrap{padding:var(--space-4) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom,0px))}
+  .composer{width:min(80%,480px)}
+  .composer:focus-within{width:min(100%,600px)}
+  .hint{right:var(--space-5)}
+}
+
+/* ── Wide desktop (≥1441px) ─────────────────────────────── */
+@media (min-width:1441px){
+  .feed{padding-left:var(--space-8);padding-right:var(--space-8)}
+  .composer{width:520px}
+  .composer:focus-within{width:720px}
+  .hint{right:var(--space-8)}
+}
+
+/* ── Phone (≤680px): off-canvas drawer + full-bleed layout ─ */
+@media (max-width:680px){
+  /* Sidebar becomes a slide-over drawer instead of a fixed rail,
+     so the section list stays reachable on small screens. */
+  .sidebar,
+  .sidebar.collapsed{
+    position:fixed;top:0;left:0;
+    width:min(300px,86vw);flex-basis:auto;
+    height:100vh;height:100dvh;
+    padding:var(--space-4) var(--space-3);
+    padding-top:calc(var(--space-4) + env(safe-area-inset-top,0px));
+    padding-bottom:calc(var(--space-4) + env(safe-area-inset-bottom,0px));
+    transform:translateX(-102%);
+    transition:transform var(--duration-slow) var(--ease);
+    box-shadow:0 0 40px rgba(0,0,0,.14);
+    z-index:45;
+  }
+  .sidebar.open{transform:translateX(0)}
+  .sidebar.collapsed .sidebar-header{justify-content:space-between;padding:0 var(--space-2)}
+  .sidebar.collapsed .sidebar-header .brand{display:block}
+  .sidebar.collapsed .section-list{display:flex}
+  .sidebar.collapsed .new-section{width:100%;padding:0 var(--space-3);justify-content:flex-start}
+  .sidebar.collapsed .new-section .new-section-label{display:inline}
+  .sidebar.collapsed .toggle{margin:0}
+  .sidebar .toggle .material-symbols-outlined{transform:rotate(180deg)}
+
+  .topbar{padding-left:var(--space-4);padding-right:var(--space-4)}
+  .feed{padding:var(--space-6) var(--space-4) 260px}
+  .entry-text{font-size:15px}
+
+  .composer-wrap{padding:var(--space-4) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom,0px))}
+  .composer,
+  .composer:focus-within{width:100%;max-width:none}
+
+  .modal{width:calc(100% - 24px);max-width:420px;padding:var(--space-5)}
+  .modal-actions{gap:var(--space-3)}
+  .modal-actions button{flex:1;height:44px;padding:0 var(--space-3)}
+
+  /* Settings becomes a bottom sheet. */
+  .settings-layer{align-items:flex-end}
+  .settings{
+    width:100%;max-width:none;max-height:min(92dvh,92vh);
+    border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+    transform:translateY(24px);
+    transition:transform var(--duration-slow) var(--ease-emphasized);
+  }
+  .settings-layer.open .settings{transform:translateY(0)}
+  .settings.is-closing{transform:translateY(24px)}
+  .settings-header{padding:var(--space-4) var(--space-4) 0}
+  .settings-body{padding:var(--space-4)}
+  .settings-footer{
+    padding:0 var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom,0px));
+    gap:var(--space-3);
+  }
+  .settings-footer button{flex:1;height:44px}
+  .settings-row{height:auto;min-height:44px;flex-wrap:wrap;gap:var(--space-2) var(--space-3)}
+  .settings-label{white-space:normal;flex:1 1 auto}
+}
+
+/* ── Short viewports (landscape phones, small windows) ──── */
+@media (max-height:560px){
+  :root{--topbar-h:44px}
+  .feed{padding-top:var(--space-4);padding-bottom:220px}
+  .composer-wrap{padding-top:var(--space-3);padding-bottom:calc(var(--space-4) + env(safe-area-inset-bottom,0px))}
+  .empty{min-height:32vh}
+  .settings{max-height:min(96dvh,96vh)}
+  .settings-header{padding-top:var(--space-3)}
+  .settings-body{padding-top:var(--space-3)}
+  .settings-footer{padding-bottom:calc(var(--space-3) + env(safe-area-inset-bottom,0px))}
+}
+
+/* ── Motion preferences ─────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    transition-duration:1ms!important;
+    animation-duration:1ms!important;
+    animation-delay:0ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+  }
 }

@@ -1,8 +1,9 @@
 .sidebar{
   width:var(--sidebar-w);flex:0 0 var(--sidebar-w);
-  height:100vh;background:var(--bg);
+  height:100vh;height:100dvh;background:var(--bg);
   border-right:1px solid var(--line);
   padding:var(--space-4) var(--space-3);
+  padding-top:calc(var(--space-4) + env(safe-area-inset-top,0px));
   display:flex;flex-direction:column;overflow:hidden;z-index:10;
   transition:width var(--duration-slow) var(--ease),flex-basis var(--duration-slow) var(--ease),padding var(--duration-slow) var(--ease);
 }
@@ -13,15 +14,15 @@
 
 .sidebar-header{
   height:var(--section-h);display:flex;align-items:center;justify-content:space-between;
-  padding:0 var(--space-2);margin-bottom:var(--space-3);
+  padding:0 var(--space-2);margin-bottom:var(--space-3);flex-shrink:0;
 }
-.sidebar-header .brand{font-size:16px;font-weight:700;letter-spacing:-.02em;color:var(--ink)}
+.sidebar-header .brand{font-size:16px;font-weight:700;letter-spacing:-.02em;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sidebar.collapsed .sidebar-header{justify-content:center;padding:0}
 .sidebar.collapsed .sidebar-header .brand{display:none}
 
 .toggle{
   width:var(--btn-icon);height:var(--btn-icon);border-radius:var(--radius-sm);
-  margin-left:auto;display:grid;place-items:center;
+  margin-left:auto;display:grid;place-items:center;flex-shrink:0;
   transition:background var(--duration-fast) var(--ease),transform var(--duration-fast) var(--ease);
 }
 .toggle:hover{background:rgba(0,0,0,.06)}
@@ -30,7 +31,7 @@
 .sidebar.collapsed .toggle{margin:0}
 .sidebar.collapsed .toggle .material-symbols-outlined{transform:rotate(180deg)}
 
-.section-list{display:flex;flex-direction:column;gap:var(--space-1);overflow:auto;padding:var(--space-1) 0}
+.section-list{display:flex;flex-direction:column;gap:var(--space-1);overflow:auto;overscroll-behavior:contain;padding:var(--space-1) 0;-webkit-overflow-scrolling:touch}
 .sidebar.collapsed .section-list{display:none}
 
 .section-item{position:relative}
@@ -44,13 +45,11 @@
 .section:active{transform:scale(.98)}
 .section.active{background:rgba(0,0,0,.08);color:var(--ink);}
 .section-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;font-size:13px;}
-.section-count{color:var(--muted);font-size:12px;}
+.section-count{color:var(--muted);font-size:12px;flex-shrink:0}
 .section-actions{
-  height:0;overflow:hidden;display:flex;gap:var(--space-1);
-  justify-content:flex-end;padding:0 var(--space-3);
-  transition:height var(--duration-normal) var(--ease);
+  display:flex;gap:var(--space-1);
+  justify-content:flex-end;padding:var(--space-1) var(--space-3) 0;
 }
-.section-item:hover .section-actions{height:34px;padding:var(--space-1) var(--space-3) 0}
 .section-btn{
   width:var(--btn-icon);height:var(--btn-icon);border-radius:var(--radius-sm);
   display:grid;place-items:center;color:var(--muted);
@@ -61,7 +60,17 @@
 .section-btn.danger:hover{color:var(--danger)}
 .section-btn .material-symbols-outlined{font-size:16px}
 
-.sidebar-bottom{margin-top:auto;padding:var(--space-2) 0 0}
+/* Reveal-on-hover only where hover exists; always visible on touch. */
+@media (hover:hover) and (pointer:fine){
+  .section-actions{
+    height:0;overflow:hidden;padding:0 var(--space-3);
+    transition:height var(--duration-normal) var(--ease);
+  }
+  .section-item:hover .section-actions,
+  .section-item:focus-within .section-actions{height:calc(var(--btn-icon) + 6px);padding:var(--space-1) var(--space-3) 0}
+}
+
+.sidebar-bottom{margin-top:auto;padding:var(--space-2) 0 0;flex-shrink:0}
 .new-section{
   width:100%;height:var(--section-h);border-radius:var(--radius-md);
   display:flex;align-items:center;gap:var(--space-2);padding:0 var(--space-3);color:var(--muted);
@@ -70,5 +79,16 @@
 .new-section:hover{background:rgba(0,0,0,.05);color:var(--ink)}
 .new-section:active{transform:scale(.97)}
 .new-section .material-symbols-outlined{flex-shrink:0}
+.new-section-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sidebar.collapsed .new-section{width:var(--section-h);padding:0;justify-content:center}
 .sidebar.collapsed .new-section .new-section-label{display:none}
+
+/* ── Off-canvas backdrop (mobile drawer) ── */
+.sidebar-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.35);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity var(--duration-slow) var(--ease),visibility var(--duration-slow);
+  z-index:44;
+}
+.sidebar-backdrop.show{opacity:1;visibility:visible;pointer-events:auto}
+@media (min-width:681px){.sidebar-backdrop{display:none}}

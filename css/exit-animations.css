@@ -43,7 +43,6 @@
 @media (prefers-reduced-motion: reduce) {
   .is-exit,
   .section-item.is-exit {
-    animation: none !important;
-    display: none !important;
+    animation-duration: 1ms !important;
   }
 }

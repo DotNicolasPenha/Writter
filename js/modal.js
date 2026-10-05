@@ -87,13 +87,18 @@ function confirmModalAction(){
     closeModal();
     const sectionEl = document.querySelector(`.section-item .section[data-section="${modalTargetId}"]`)?.closest(".section-item");
     if(sectionEl){
-      sectionEl.classList.add("is-exit");
-      sectionEl.addEventListener("animationend", () => {
+      let removed = false;
+      const finish = () => {
+        if(removed) return;
+        removed = true;
         data.entries = data.entries.filter(e => e.section !== modalTargetId);
         data.sections = data.sections.filter(s => s.id !== modalTargetId);
         if(data.active === modalTargetId) data.active = "all";
         save(); window.__renderAll();
-      }, { once: true });
+      };
+      sectionEl.classList.add("is-exit");
+      sectionEl.addEventListener("animationend", finish, { once: true });
+      setTimeout(finish, 400);
     } else {
       data.entries = data.entries.filter(e => e.section !== modalTargetId);
       data.sections = data.sections.filter(s => s.id !== modalTargetId);

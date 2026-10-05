@@ -1,15 +1,18 @@
 .composer-wrap{
-  position:absolute;left:0;right:0;bottom:0;padding:var(--space-5) var(--space-6) var(--space-6);
+  position:absolute;left:0;right:0;
+  bottom:0;
+  bottom:var(--kb,0px);
+  padding:var(--space-5) var(--space-6) calc(var(--space-6) + env(safe-area-inset-bottom,0px));
   display:flex;justify-content:center;pointer-events:none;
   background:linear-gradient(to bottom,transparent,var(--bg) 40%);
 }
 .composer{
-  pointer-events:auto;width:30%;
+  pointer-events:auto;width:30%;max-width:560px;
   background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-xl);
   display:flex;align-items:flex-end;gap:var(--space-2);padding:var(--space-2);
   transition:width var(--duration-slow) var(--ease-emphasized),border-color var(--duration-normal) var(--ease);
 }
-.composer:focus-within{width:min(720px,48%);border-color:#b0b0b5}
+.composer:focus-within{width:min(720px,48%);max-width:720px;border-color:#b0b0b5}
 .composer textarea{
   flex:1;min-width:0;resize:none;border:0;outline:0;background:transparent;
   padding:var(--space-2) var(--space-2) var(--space-2) var(--space-3);

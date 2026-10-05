@@ -1,7 +1,7 @@
 import { renderSections } from "./sidebar.js";
 import { renderFeed, autoSize } from "./feed.js";
 import { initModal } from "./modal.js";
-import { initSidebar } from "./sidebar.js";
+import { initSidebar, closeDrawer } from "./sidebar.js";
 import { initFeed } from "./feed.js";
 import { initSettings, openSettings } from "./settings.js";
 
@@ -17,7 +17,10 @@ initSidebar();
 initFeed();
 initSettings();
 
-document.getElementById("openSettings").addEventListener("click", openSettings);
+document.getElementById("openSettings").addEventListener("click", () => {
+  closeDrawer();
+  openSettings();
+});
 
 renderAll();
 autoSize();
