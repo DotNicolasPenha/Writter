@@ -6,6 +6,9 @@
   display:flex;justify-content:center;pointer-events:none;
   background:linear-gradient(to bottom,transparent,var(--bg) 40%);
 }
+/* With the keyboard open the composer rests on its top edge, so the usual
+   breathing room would only leave a dead gap above the keys. */
+html.kb-open .composer-wrap{padding-bottom:0}
 .composer{
   pointer-events:auto;width:30%;max-width:560px;
   background:var(--paper);border:1px solid var(--line);border-radius:var(--radius-xl);

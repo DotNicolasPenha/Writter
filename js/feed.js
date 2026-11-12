@@ -118,7 +118,12 @@ function initViewport(){
   const vv = window.visualViewport;
   let kb = 0;
 
-  const apply = () => document.documentElement.style.setProperty("--kb", kb + "px");
+  const apply = () => {
+    const root = document.documentElement;
+    root.style.setProperty("--kb", kb + "px");
+    // Lets css/composer.css drop the resting padding while keys are up.
+    root.classList.toggle("kb-open", kb > 0);
+  };
   const clear = () => { if(kb){ kb = 0; apply(); } };
   const update = () => {
     if(document.activeElement !== input){ clear(); return; }
@@ -136,6 +141,23 @@ function initViewport(){
   window.addEventListener("orientationchange", clear);
 }
 
+/* The feed's bottom padding follows the composer's real height instead of
+   the old magic 260px, so short screens don't scroll through dead space and
+   a growing textarea still can't cover the last entry. */
+function initComposerSpace(){
+  const wrap = document.querySelector(".composer-wrap");
+  if(!wrap) return;
+
+  const sync = () => {
+    const height = Math.round(wrap.getBoundingClientRect().height) + 24;
+    document.documentElement.style.setProperty("--composer-space", height + "px");
+  };
+
+  sync();
+  window.addEventListener("resize", sync);
+  if(window.ResizeObserver) new ResizeObserver(sync).observe(wrap);
+}
+
 export function initFeed(){
   input.addEventListener("input",autoSize);
   input.addEventListener("keydown",e=>{
@@ -150,4 +172,5 @@ export function initFeed(){
   });
 
   initViewport();
+  initComposerSpace();
 }

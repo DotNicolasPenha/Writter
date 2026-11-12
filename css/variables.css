@@ -46,4 +46,7 @@
   --btn-icon:28px;
   --input-h:40px;
   --composer-h:38px;
+  /* Bottom padding of the feed; kept in sync with the composer's real
+     height by syncComposerSpace() in js/feed.js. */
+  --composer-space:260px;
 }

@@ -42,7 +42,7 @@
 /* ── Tablet (681px – 1024px) ────────────────────────────── */
 @media (min-width:681px) and (max-width:1024px){
   .topbar{padding-left:var(--space-5);padding-right:var(--space-5)}
-  .feed{padding:var(--space-6) var(--space-5) 260px}
+  .feed{padding:var(--space-6) var(--space-5) var(--composer-space)}
   .composer-wrap{padding:var(--space-4) var(--space-5) calc(var(--space-5) + env(safe-area-inset-bottom,0px))}
   .composer{width:min(80%,480px)}
   .composer:focus-within{width:min(100%,600px)}
@@ -68,6 +68,9 @@
     padding:var(--space-4) var(--space-3);
     padding-top:calc(var(--space-4) + env(safe-area-inset-top,0px));
     padding-bottom:calc(var(--space-4) + env(safe-area-inset-bottom,0px));
+    /* Landscape notch: without these the list runs under the camera housing. */
+    padding-left:calc(var(--space-3) + env(safe-area-inset-left,0px));
+    padding-right:calc(var(--space-3) + env(safe-area-inset-right,0px));
     transform:translateX(-102%);
     transition:transform var(--duration-slow) var(--ease);
     box-shadow:0 0 40px rgba(0,0,0,.14);
@@ -82,12 +85,28 @@
   .sidebar.collapsed .toggle{margin:0}
   .sidebar .toggle .material-symbols-outlined{transform:rotate(180deg)}
 
-  .topbar{padding-left:var(--space-2);padding-right:var(--space-4);gap:var(--space-1)}
+  .topbar{
+    padding-left:calc(var(--space-2) + env(safe-area-inset-left,0px));
+    padding-right:calc(var(--space-4) + env(safe-area-inset-right,0px));
+    gap:var(--space-1);
+  }
   .menu-btn{display:grid}
-  .feed{padding:var(--space-6) var(--space-4) 260px}
-  .entry-text{font-size:15px}
+  .feed{
+    padding-top:var(--space-6);
+    padding-bottom:var(--composer-space);
+    padding-left:calc(var(--space-4) + env(safe-area-inset-left,0px));
+    padding-right:calc(var(--space-4) + env(safe-area-inset-right,0px));
+  }
+  /* Reading measure stays at 16px on phones (the desktop default); the
+     section title gets more presence now that it sits next to the menu. */
+  .section-title{font-size:15px}
 
-  .composer-wrap{padding:var(--space-4) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom,0px))}
+  .composer-wrap{
+    padding-top:var(--space-4);
+    padding-bottom:calc(var(--space-5) + env(safe-area-inset-bottom,0px));
+    padding-left:calc(var(--space-4) + env(safe-area-inset-left,0px));
+    padding-right:calc(var(--space-4) + env(safe-area-inset-right,0px));
+  }
   .composer,
   .composer:focus-within{width:100%;max-width:none}
 
@@ -127,7 +146,7 @@
 /* ── Short viewports (landscape phones, small windows) ──── */
 @media (max-height:560px){
   :root{--topbar-h:44px}
-  .feed{padding-top:var(--space-4);padding-bottom:220px}
+  .feed{padding-top:var(--space-4);padding-bottom:var(--composer-space)}
   .composer-wrap{padding-top:var(--space-3);padding-bottom:calc(var(--space-4) + env(safe-area-inset-bottom,0px))}
   .empty{min-height:32vh}
   .settings{max-height:min(96dvh,96vh)}

@@ -81,6 +81,8 @@ function save() {
 }
 
 /* ── Apply to DOM ── */
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+
 function apply() {
   const r = document.documentElement.style;
   r.setProperty("--bg", settings.bg);
@@ -100,6 +102,10 @@ function apply() {
   for (const [k, v] of Object.entries(baseRadius)) {
     r.setProperty(k, Math.round(v * settings.radiusScale) + "px");
   }
+
+  // The installed app paints its status bar with this colour, so it has to
+  // follow the user's background instead of staying at the default #f5f5f7.
+  if (themeMeta) themeMeta.setAttribute("content", settings.bg);
 }
 
 apply();
