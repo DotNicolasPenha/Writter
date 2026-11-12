@@ -15,7 +15,9 @@ A minimal, distraction-free writing app built with vanilla HTML, CSS, and JavaSc
 - **Fully customizable appearance** -- fonts, colors, spacing, dimensions
 - **Collapsible sidebar** -- toggle between expanded and icon-only mode
 - **Keyboard shortcuts** -- `Cmd/Ctrl + Enter` to save, `Escape` to close modals
-- **Responsive design** -- works across desktop and mobile
+- **Responsive design** -- off-canvas section drawer on phones, keyboard-aware composer, notch/safe-area handling
+- **Installable PWA** -- runs standalone from the home screen on iOS and Android
+- **Works offline** -- the app shell and the icon font are served from cache once visited
 - **Smooth animations** -- text-swap save indicator, exit transitions, modal open/close
 
 ---
@@ -67,8 +69,13 @@ All visual aspects of the app can be configured through the Settings panel.
 ```
 writter/
 ├── index.html
+├── manifest.json          # Web app manifest (name, icons, display mode)
+├── sw.js                  # Service worker: offline shell + Google Fonts cache
 ├── assets/
+│   ├── icons/             # PWA icons (generated, not hand-edited)
 │   └── images/
+├── tools/
+│   └── gen-icons.py       # Regenerates assets/icons with Pillow
 ├── css/
 │   ├── variables.css        # Design tokens (colors, spacing, typography)
 │   ├── reset.css            # CSS reset / normalize
@@ -81,12 +88,12 @@ writter/
 │   ├── text-swap.css        # Save indicator animation
 │   └── exit-animations.css  # Element removal transitions
 └── js/
-    ├── app.js               # Entry point, initializes all modules
+    ├── app.js               # Entry point, initializes all modules + registers the SW
     ├── store.js             # Data model and localStorage persistence
     ├── dom.js               # Cached DOM element references
-    ├── feed.js              # Feed rendering and entry CRUD
+    ├── feed.js              # Feed rendering, entry CRUD, keyboard/viewport handling
     ├── modal.js             # Section modal (create/rename/delete)
-    ├── sidebar.js           # Section list and sidebar toggle
+    ├── sidebar.js           # Section list, drawer and sidebar toggle
     └── settings.js          # Settings config, rendering, and application
 ```
 
@@ -118,6 +125,24 @@ All data is stored in `localStorage` under the key `meu-espaco-escrita-v1`. Clea
 
 ---
 
+## PWA
+
+The app is installable and keeps working without a connection.
+
+- **Install** -- use *Add to Home Screen* (iOS Safari) or *Install app* (Chrome/Edge). It opens without browser chrome, with the status bar matching the app background.
+- **Offline** -- the first visit registers `sw.js` and precaches the shell (HTML, CSS, JS, icons). From the next visit on, the page and the Google Fonts -- including the Material Symbols icon font -- are served from cache, so the icons never degrade to literal text.
+- **Updates** -- there is no automatic `skipWaiting()`, so an update applies on the next launch and can never pair a new CSS file with an already-open page. When you change cached files, bump `VERSION` at the top of `sw.js` so the old cache is dropped.
+
+### Regenerating the icons
+
+```bash
+python3 tools/gen-icons.py
+```
+
+Writes `assets/icons/` (192, 512, maskable 512, apple-touch 180, favicon 48) with Pillow -- no build tooling involved. Edit `BG`, `INK` and `FONT` in that script to restyle them; keep `--bg` and the manifest `theme_color` in sync.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -125,7 +150,8 @@ All data is stored in `localStorage` under the key `meu-espaco-escrita-v1`. Clea
 | Markup | HTML5 |
 | Styling | Vanilla CSS (custom properties) |
 | Logic | Vanilla JavaScript (ES modules) |
-| Icons | Google Material Symbols |
+| Offline | Service worker + Web App Manifest |
+| Icons | Google Material Symbols, PWA icons generated with Pillow |
 | Fonts | Google Fonts (Lora, Poppins, Comic Relief, Huninn) |
 | Storage | localStorage |
 

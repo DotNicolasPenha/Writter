@@ -24,3 +24,12 @@ document.getElementById("openSettings").addEventListener("click", () => {
 
 renderAll();
 autoSize();
+
+/* Offline support. A service worker needs a secure context, and a rejected
+   registration (private mode, disabled storage) must never break the app. */
+const secureLocalhost = ["localhost", "127.0.0.1"].includes(location.hostname);
+if ("serviceWorker" in navigator && (location.protocol === "https:" || secureLocalhost)) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
