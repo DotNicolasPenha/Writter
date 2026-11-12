@@ -105,27 +105,35 @@ function addEntry(){
 }
 
 /* Keeps the composer above the on-screen keyboard on mobile.
-   Sets --kb on :root, consumed by .composer-wrap { bottom: var(--kb) }. */
+   Sets --kb on :root, consumed by .composer-wrap { bottom: var(--kb) }.
+   iOS/Chrome leave the layout viewport alone and shrink only the visual one,
+   panning it so its bottom edge sits on the keyboard: the keyboard therefore
+   starts at (offsetTop + vv.height) in layout coordinates, which makes
+   innerHeight - vv.height - offsetTop valid even while pinch/auto-zoomed.
+   The old guard bailed out when scale > 1 and forced --kb to 0, burying the
+   composer behind the keyboard exactly when zoomed. The cap only rejects
+   nonsense deltas (extreme zoom), since no keyboard takes 60% of the screen. */
 function initViewport(){
   if(!window.visualViewport) return;
   const vv = window.visualViewport;
   let kb = 0;
 
   const apply = () => document.documentElement.style.setProperty("--kb", kb + "px");
+  const clear = () => { if(kb){ kb = 0; apply(); } };
   const update = () => {
-    if(document.activeElement !== input || vv.scale > 1){
-      if(kb){ kb = 0; apply(); }
-      return;
-    }
-    kb = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+    if(document.activeElement !== input){ clear(); return; }
+    const delta = window.innerHeight - vv.height - vv.offsetTop;
+    kb = Math.max(0, Math.min(Math.round(delta), Math.round(window.innerHeight * 0.6)));
     apply();
   };
 
   vv.addEventListener("resize", update);
   vv.addEventListener("scroll", update);
-  input.addEventListener("blur", () => {
-    setTimeout(() => { if(kb){ kb = 0; apply(); } }, 80);
-  });
+  // The keyboard resize can land before focus is committed, and focus itself
+  // guarantees a value is written even when no resize event ever fires.
+  input.addEventListener("focus", update);
+  input.addEventListener("blur", () => setTimeout(clear, 80));
+  window.addEventListener("orientationchange", clear);
 }
 
 export function initFeed(){

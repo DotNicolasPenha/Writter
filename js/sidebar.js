@@ -4,6 +4,7 @@ import { openModal } from "./modal.js";
 
 const backdrop = document.getElementById("sidebarBackdrop");
 const toggleBtn = document.getElementById("toggleSidebar");
+const menuBtn = document.getElementById("openMenu");
 const mobileMQ = window.matchMedia("(max-width: 680px)");
 
 const isMobile = () => mobileMQ.matches;
@@ -17,6 +18,17 @@ export function closeDrawer(){
   if(!sidebar.classList.contains("open")) return;
   setDrawer(false);
   syncAria();
+  // The drawer's own toggle is off-canvas once closed, so focus has to go
+  // back to the topbar trigger or keyboard users get stranded.
+  if(isMobile() && menuBtn.offsetParent !== null) menuBtn.focus();
+}
+
+export function openDrawer(){
+  if(!isMobile() || sidebar.classList.contains("open")) return;
+  setDrawer(true);
+  syncAria();
+  const first = sectionList.querySelector(".section") || toggleBtn;
+  first.focus();
 }
 
 function setCollapsed(collapsed){
@@ -29,11 +41,17 @@ function syncAria(){
   const open = mobile
     ? sidebar.classList.contains("open")
     : !sidebar.classList.contains("collapsed");
-  toggleBtn.setAttribute("aria-expanded", String(open));
-  toggleBtn.setAttribute("aria-label", mobile
+  const label = mobile
     ? (open ? "Close menu" : "Open menu")
-    : "Toggle sidebar");
-  toggleBtn.title = toggleBtn.getAttribute("aria-label");
+    : "Toggle sidebar";
+
+  // Two triggers share the same state: the topbar button (phones only) and
+  // the sidebar's own toggle, which doubles as the close button in the drawer.
+  for(const btn of [toggleBtn, menuBtn]){
+    btn.setAttribute("aria-expanded", String(open));
+    btn.setAttribute("aria-label", label);
+    btn.title = label;
+  }
 }
 
 export function renderSections(){
@@ -91,6 +109,12 @@ export function initSidebar(){
       setCollapsed(!sidebar.classList.contains("collapsed"));
     }
     syncAria();
+  });
+
+  menuBtn.addEventListener("click", () => {
+    if(!isMobile()) return;
+    if(sidebar.classList.contains("open")) closeDrawer();
+    else openDrawer();
   });
 
   backdrop.addEventListener("click", closeDrawer);

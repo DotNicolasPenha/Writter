@@ -8,6 +8,19 @@
   display:flex;align-items:center;padding-left:var(--space-6);padding-right:var(--space-6);
   position:relative;z-index:3;
 }
+/* Opens the off-canvas drawer on phones; hidden on desktop where the
+   sidebar's own toggle (inside the always-visible rail) is the control.
+   Uses --btn-h so it grows to 44px on coarse pointers. */
+.menu-btn{
+  display:none;width:var(--btn-h);height:var(--btn-h);flex-shrink:0;
+  border-radius:var(--radius-sm);place-items:center;color:var(--ink);
+  margin-right:var(--space-2);
+  transition:background var(--duration-fast) var(--ease),transform var(--duration-fast) var(--ease);
+}
+.menu-btn:hover{background:rgba(0,0,0,.06)}
+.menu-btn:active{transform:scale(.92)}
+.menu-btn .material-symbols-outlined{font-size:20px}
+
 .section-title{
   font-size:13px;color:var(--muted);font-weight:500;letter-spacing:.01em;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;
